@@ -74,6 +74,12 @@ python3 -m http.server 5500
 
 Depois, acesse `http://localhost:5500`.
 
+## Como Contribuir
+
+Para contribuir com padrao de qualidade e fluxo de PR, consulte:
+
+- `CONTRIBUTING.md`
+
 ## Próximos Passos Recomendados
 
 - Criar novas features em `src/features/` (ex.: privacidade adaptativa por face).
