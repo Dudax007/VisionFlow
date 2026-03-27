@@ -1,28 +1,81 @@
-# VisionFlow 👁️
+# VisionFlow
 
-> **Touchless UX & Privacy-Centric Web Interface**
+> Touchless UX com foco em privacidade para experiências web interativas.
 
-O **VisionFlow** é uma interface web consciente projetada para a trilha "AI Experience". O projeto utiliza Visão Computacional de última geração para redefinir a interação humano-computador (HCI), eliminando a dependência de periféricos físicos e priorizando a segurança e privacidade do usuário em tempo real.
+O VisionFlow é um projeto de interface web para interação sem toque, usando visão computacional com webcam para capturar biometria das mãos e transformar gestos em ações de navegação.
 
----
+## Visão do Projeto
 
-## 💡 A Solução
+O projeto utiliza um modelo de IA da linha Gemini para estratégia de biometria da mão e camada de inteligência da experiência, com implementação front-end em HTML + JavaScript.
 
-O VisionFlow opera através do processamento paralelo de dois fluxos críticos de Inteligência Artificial via WebCam:
+Fluxo principal:
+1. Captura da webcam em tempo real.
+2. Detecção de landmarks da mão.
+3. Mapeamento de gestos para cursor, clique e rolagem.
+4. Feedback visual instantâneo na interface.
 
-1.  **Navegação Sem Toque (Hand Tracking):** Mapeamento de 21 pontos de referência da mão (Hand Landmarks) para controle de cursor, cliques e gestos de scroll, garantindo acessibilidade para usuários com mobilidade reduzida.
-2.  **Privacidade Adaptativa (Face Sensing):** Algoritmo de detecção de presença e atenção facial. Aplica camadas de desfoque (Blur) instantâneo no conteúdo sensível da tela caso o usuário desvie o olhar ou se ausente da frente do dispositivo.
+## Stack Atual
 
----
+- HTML5
+- JavaScript (Vanilla)
+- MediaPipe Hands (detecção de landmarks)
+- Gemini (camada de IA para evolução de biometria/experiência)
 
-## 🛠️ Tecnologias e Arquitetura
+## Estrutura Profissional do Repositório
 
-ESTÁ SENDO UTILIZADO PARA DESENVOLVIMENTO ATÉ ENTÃO JAVASCRIPT E HTML
----
+```text
+VisionFlow/
+├── .gitignore
+├── README.md
+├── dev/
+│   └── README.md
+├── docs/
+│   └── README.md
+└── src/
+	├── README.md
+	└── features/
+		└── hand-biometrics/
+			├── index.html
+			└── script.js
+```
 
-## 🔧 Funcionalidades Principais
+## Organização de Branches (Git)
 
--   **Cursor Control:** Movimentação baseada no centro da palma ou dedo indicador.
--   **Gesture Commands:** "Pinça" para clique esquerdo; mão fechada para "drag and drop".
--   **Eye-Contact Privacy:** Se o modelo não detectar a íris ou face voltada para a tela, o `canvas` ou `div` principal é ofuscado via CSS Filter.
--   **Low Latency Pipeline:** Otimização de frames para evitar fadiga visual e atraso de resposta.
+- `main`: produção/estável.
+- `dev`: integração contínua das funcionalidades.
+- `feature/<nome-da-feature>`: desenvolvimento isolado de novas features.
+- `hotfix/<nome-do-ajuste>`: correções urgentes.
+
+Sugestão de fluxo:
+1. Criar branch a partir de `dev`.
+2. Implementar a feature em `src/features/<nome>`.
+3. Abrir PR para `dev`.
+4. Promover `dev` para `main` em release.
+
+## Funcionalidades Implementadas
+
+- Controle de cursor por movimento da mão.
+- Clique por gesto de pinça.
+- Scroll por posição vertical da mão.
+- Feedback de status para usuário durante detecção.
+
+## Como Executar
+
+Como o projeto está em HTML e JavaScript puro, basta abrir:
+
+- `src/features/hand-biometrics/index.html`
+
+Para melhor experiência, use servidor local. Exemplo:
+
+```bash
+cd src/features/hand-biometrics
+python3 -m http.server 5500
+```
+
+Depois, acesse `http://localhost:5500`.
+
+## Próximos Passos Recomendados
+
+- Criar novas features em `src/features/` (ex.: privacidade adaptativa por face).
+- Adicionar camada de configuração para provedores de IA.
+- Formalizar testes manuais e checklist de QA em `docs/`.
