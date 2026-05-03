@@ -32,11 +32,14 @@ VisionFlow/
 ├── docs/
 │   └── README.md
 └── src/
-	├── README.md
-	└── features/
-		└── hand-biometrics/
-			├── index.html
-			└── script.js
+    ├── README.md
+    └── features/
+        ├── hand-biometrics/
+        │   ├── index.html
+        │   └── script.js
+        └── libras/
+            ├── index.html
+            └── script.js
 ```
 
 ## Organização de Branches (Git)
@@ -58,12 +61,25 @@ Sugestão de fluxo:
 - Clique por gesto de pinça.
 - Scroll por posição vertical da mão.
 - Feedback de status para usuário durante detecção.
+- Onboarding guiado em 3 etapas (consentimento, detecção e clique).
+- Banner de consentimento de câmera com revogação de captura.
+- Fallback sem câmera por teclado (setas/WASD + Enter/Espaço).
+- Painel de calibração ao vivo com presets (Suave, Padrão e Rápido).
+- Histórico rápido de eventos em tempo real.
+- Página web de hospedagem em `index.html` com preview da ferramenta.
+- Pinça longa para alternar rapidamente o modo apresentação.
+- Swipe lateral com a mão para navegar entre checkpoints da demo.
+- Modo apresentação com foco visual para pitch e demonstração.
+- Interpretador Libras experimental com alfabeto inicial por regras.
+- Studio Libras dedicado em página separada com composição de frase, sugestões contextuais e templates personalizados.
 
 ## Como Executar
 
 Como o projeto está em HTML e JavaScript puro, basta abrir:
 
-- `src/features/hand-biometrics/index.html`
+- `index.html` (página de hospedagem principal)
+- `src/features/hand-biometrics/index.html` (laboratório touchless direto)
+- `src/features/libras/index.html` (studio dedicado de interpretação em Libras)
 
 Para melhor experiência, use servidor local. Exemplo:
 
