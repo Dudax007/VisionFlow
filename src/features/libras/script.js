@@ -39,7 +39,8 @@
         actionBackspaceBtn: document.getElementById("action-backspace"),
         actionClearBtn: document.getElementById("action-clear"),
         actionCopyBtn: document.getElementById("action-copy"),
-        actionExportBtn: document.getElementById("action-export")
+        actionExportBtn: document.getElementById("action-export"),
+        visualGrid: document.getElementById("visual-grid")
     };
 
     if (!dom.video || !dom.landmarkCanvas || !dom.effectsCanvas || !dom.outputText) {
@@ -412,6 +413,15 @@
         }
         if (dom.confidenceText) {
             dom.confidenceText.textContent = `Confianca ${Math.round(confidence * 100)}%`;
+        }
+
+        // Highlight Grid Key se confiança for maior que limiar ou muito alta
+        if (dom.visualGrid) {
+            document.querySelectorAll(".grid-key").forEach(key => key.classList.remove("active"));
+            if (label && confidence > config.confidenceThreshold) {
+                const key = document.getElementById(`grid-key-${label.toUpperCase()}`);
+                if (key) key.classList.add("active");
+            }
         }
     }
 
@@ -1223,6 +1233,7 @@
 
         if (dom.recordTemplateBtn) {
             dom.recordTemplateBtn.textContent = "Parar captura";
+            dom.recordTemplateBtn.classList.add("recording");
         }
 
         updateTemplateStatus(`Capturando sinal ${label}... mantenha a mao estavel.`);
@@ -1237,6 +1248,7 @@
         state.recording.active = false;
         if (dom.recordTemplateBtn) {
             dom.recordTemplateBtn.textContent = "Iniciar captura";
+            dom.recordTemplateBtn.classList.remove("recording");
         }
 
         const samples = state.recording.samples;
@@ -1530,6 +1542,18 @@
     function openConsentModal() {
         if (dom.consentModal) {
             dom.consentModal.classList.remove("hidden");
+        }
+        
+        if (dom.visualGrid) {
+            const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+            dom.visualGrid.innerHTML = "";
+            alphabet.forEach(letter => {
+                const div = document.createElement("div");
+                div.className = "grid-key";
+                div.id = `grid-key-${letter}`;
+                div.textContent = letter;
+                dom.visualGrid.appendChild(div);
+            });
         }
     }
 
