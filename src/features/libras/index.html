@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br" data-theme="dark">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,39 +10,21 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Sora:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        :root[data-theme="light"] {
-            --bg: #f8fafc;
-            --bg-soft: rgba(255, 255, 255, 0.75);
-            --ink: #0f172a;
-            --ink-soft: #475569;
-            --line: rgba(148, 163, 184, 0.3);
-            --brand: #0f766e;
-            --brand-2: #ea580c;
-            --ok: #059669;
-            --warn: #dc2626;
-            --shadow: 0 24px 44px rgba(15, 23, 42, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.5);
-            --brand-glow: rgba(15, 118, 110, 0.4);
-        }
-
-        :root[data-theme="dark"] {
-            --bg: #0f172a;
-            --bg-soft: rgba(30, 41, 59, 0.6);
-            --ink: #f8fafc;
-            --ink-soft: #94a3b8;
-            --line: rgba(148, 163, 184, 0.15);
-            --brand: #14b8a6;
-            --brand-2: #f97316;
-            --ok: #10b981;
-            --warn: #ef4444;
-            --shadow: 0 24px 44px rgba(0, 0, 0, 0.4);
-            --glass-border: rgba(255, 255, 255, 0.05);
-            --brand-glow: rgba(20, 184, 166, 0.4);
+        :root {
+            --bg: #eef4f3;
+            --bg-soft: #ffffff;
+            --ink: #0f2f35;
+            --ink-soft: #506a6f;
+            --line: #cfe0df;
+            --brand: #0b7f72;
+            --brand-2: #f08a4b;
+            --ok: #1d9f85;
+            --warn: #d4603a;
+            --shadow: 0 22px 44px rgba(16, 46, 52, 0.12);
         }
 
         * {
             box-sizing: border-box;
-            transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
         }
 
         html,
@@ -51,28 +33,28 @@
             min-height: 100%;
             color: var(--ink);
             font-family: "Plus Jakarta Sans", sans-serif;
-            background-color: var(--bg);
-            background-image:
-                radial-gradient(circle at 8% 10%, rgba(20, 184, 166, 0.12), transparent 28%),
-                radial-gradient(circle at 95% 4%, rgba(249, 115, 22, 0.12), transparent 30%);
-            background-attachment: fixed;
+            background:
+                radial-gradient(circle at 8% 10%, rgba(11, 127, 114, 0.16), transparent 28%),
+                radial-gradient(circle at 95% 4%, rgba(240, 138, 75, 0.18), transparent 30%),
+                linear-gradient(160deg, #ebf2f1 0%, #f5f7f6 45%, #e9efee 100%);
             overflow-x: hidden;
         }
 
         body.high-contrast {
-            --bg: #000000;
-            --bg-soft: #111111;
-            --ink: #ffffff;
-            --ink-soft: #bbbbbb;
-            --line: #333333;
-            --brand: #00ffcc;
-            --brand-2: #ff9900;
-            --ok: #00ff00;
-            --warn: #ff3300;
-            --shadow: 0 22px 44px rgba(0, 0, 0, 0.8);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --brand-glow: rgba(0, 255, 204, 0.8);
-            background: #000000;
+            --bg: #0d1117;
+            --bg-soft: #141a22;
+            --ink: #f0f7ff;
+            --ink-soft: #a7bbcc;
+            --line: #2f4152;
+            --brand: #38d4bf;
+            --brand-2: #ffb067;
+            --ok: #47d9a2;
+            --warn: #ff7f65;
+            --shadow: 0 22px 44px rgba(0, 0, 0, 0.32);
+            background:
+                radial-gradient(circle at 8% 10%, rgba(56, 212, 191, 0.15), transparent 28%),
+                radial-gradient(circle at 95% 4%, rgba(255, 176, 103, 0.18), transparent 30%),
+                linear-gradient(160deg, #0b1118 0%, #101822 45%, #121f2a 100%);
         }
 
         .orb {
@@ -669,56 +651,101 @@
             }
         }
 
-        /* Visual Grid */
-        .visual-grid-container {
-            margin-top: 16px;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
-        .visual-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
-            gap: 6px;
-        }
-        .grid-key {
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            background: var(--bg-soft);
-            color: var(--ink);
-            height: 40px;
+
+        /* FPS Badge Flutuante */
+        .fps-badge {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--brand), #2f9b92);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 6px 12px;
+            border-radius: 999px;
+            z-index: 10020;
+            box-shadow: 0 4px 16px rgba(11, 127, 114, 0.3);
+            letter-spacing: 0.04em;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1rem;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            gap: 6px;
         }
-        .grid-key.active {
+        .fps-badge .fps-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #7fffec;
+            animation: pulse 1.2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Confetti */
+        .confetti-piece {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+            pointer-events: none;
+            z-index: 10100;
+            animation: confetti-fall 1.2s ease-out forwards;
+        }
+        @keyframes confetti-fall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(200px) rotate(720deg); opacity: 0; }
+        }
+
+        /* Word History */
+        .word-history-panel {
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            max-width: 260px;
+            background: var(--bg-soft);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 12px 14px;
+            z-index: 10005;
+            box-shadow: 0 8px 24px rgba(11, 127, 114, 0.12);
+        }
+        .word-history-title {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--brand);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .word-history-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+        .word-chip {
+            background: var(--bg);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 3px 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--ink);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .word-chip:hover {
             background: var(--brand);
             color: #fff;
             border-color: var(--brand);
-            box-shadow: 0 0 16px var(--brand-glow);
-            transform: scale(1.1);
-            z-index: 2;
-        }
-
-        /* Circular Progress Feedback */
-        .btn.recording {
-            position: relative;
-            color: transparent;
-            pointer-events: none;
-        }
-        .btn.recording::after {
-            content: '';
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 20px; height: 20px;
-            margin: -10px 0 0 -10px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-top-color: #fff;
-            border-radius: 50%;
-            animation: spin 1s infinite linear;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -731,6 +758,21 @@
     <video id="videoElement" autoplay muted playsinline></video>
 
     <div id="notification-toast" class="toast"></div>
+
+    <!-- FPS Badge Flutuante -->
+    <div class="fps-badge" id="fps-badge">
+        <div class="fps-dot"></div>
+        <span id="fps-badge-text">-- FPS</span>
+    </div>
+
+    <!-- Word History Panel -->
+    <div class="word-history-panel" id="word-history-panel">
+        <div class="word-history-title">
+            Historico de Palavras
+            <button id="clear-word-history" style="background:none;border:none;color:var(--warn);cursor:pointer;font-size:0.75rem;">Limpar</button>
+        </div>
+        <div class="word-history-list" id="word-history-list"></div>
+    </div>
 
     <div id="consent-modal" class="modal hidden">
         <div class="modal-card">
@@ -841,6 +883,7 @@
                         <li class="shortcut-item"><span>Alternar landmarks</span><kbd>Alt + L</kbd></li>
                         <li class="shortcut-item"><span>Resetar frase</span><kbd>Alt + R</kbd></li>
                         <li class="shortcut-item"><span>Contraste alto</span><kbd>Alt + C</kbd></li>
+                        <li class="shortcut-item"><span>Limpar Grid</span><kbd>Alt + G</kbd></li>
                     </ul>
                 </article>
             </section>
@@ -867,9 +910,11 @@
                     <ul id="recognition-log" class="log-list"></ul>
                 </article>
 
-                <article class="panel visual-grid-container">
+                <article class="panel">
                     <h2>Grid do Alfabeto</h2>
+                    <p class="muted" style="font-size:0.82rem;margin-bottom:8px;">A letra detectada com alta confiança acende aqui em tempo real.</p>
                     <div id="visual-grid" class="visual-grid"></div>
+                    <button id="clear-grid-btn" class="btn secondary" style="margin-top:10px;width:100%;">Limpar Grid (Alt+G)</button>
                 </article>
             </section>
         </main>
