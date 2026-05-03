@@ -70,7 +70,9 @@
         scrollSmoothing: 0.18,
         handLossGraceFrames: 18,
         statsIntervalMs: 120,
-        keyboardMoveSpeed: 11
+        keyboardMoveSpeed: 11,
+        sleepModeTimeoutMs: 10000,
+        doublePinchMaxMs: 300
     };
 
     const state = {
@@ -107,8 +109,10 @@
             lastTick: performance.now()
         },
         scroll: {
-            target: 0,
-            velocity: 0,
+            targetX: 0,
+            targetY: 0,
+            velocityX: 0,
+            velocityY: 0,
             rafId: null,
             lastCountAt: 0
         },
@@ -126,11 +130,38 @@
         },
         cameraInstance: null,
         handsInstance: null,
-        lastStatsAt: 0
+        lastStatsAt: 0,
+        lastActivityAt: performance.now()
     };
 
     function clamp(value, min, max) {
         return Math.max(min, Math.min(max, value));
+    }
+
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playSound(type) {
+        if (audioCtx.state === "suspended") audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        if (type === "click") {
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.05);
+            gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.1);
+        } else if (type === "double-click") {
+            osc.type = "square";
+            osc.frequency.setValueAtTime(1000, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.15);
+        }
     }
 
     function saveSettings() {
@@ -276,6 +307,20 @@
         state.cursor.y = clamp(y, 0, window.innerHeight);
         dom.cursor.style.left = `${Math.round(state.cursor.x)}px`;
         dom.cursor.style.top = `${Math.round(state.cursor.y)}px`;
+
+        // Aura: atualiza classe visual do cursor
+        const isScrolling = Math.abs(state.scroll.velocityY) > 2 || Math.abs(state.scroll.velocityX) > 2;
+        if (state.handVisible) {
+            dom.cursor.classList.remove("tracking-low");
+            if (isScrolling) {
+                dom.cursor.classList.add("scroll-mode");
+            } else {
+                dom.cursor.classList.remove("scroll-mode");
+            }
+        } else {
+            dom.cursor.classList.add("tracking-low");
+            dom.cursor.classList.remove("scroll-mode");
+        }
     }
 
     function addWave(x, y) {
@@ -405,27 +450,31 @@
         return state.pinchDistanceEma;
     }
 
-    function updateScrollTarget(indexY, palmY) {
+    function updateScrollTarget(indexY, palmY, indexX, palmX) {
         if (!Number.isFinite(indexY) || !Number.isFinite(palmY)) {
-            state.scroll.target = 0;
+            state.scroll.targetY = 0;
+            state.scroll.targetX = 0;
             return;
         }
 
         const controlY = indexY * 0.76 + palmY * 0.24;
+        const controlX = indexX * 0.76 + palmX * 0.24;
 
         if (controlY < config.scrollDeadZoneMin) {
-            const intensity = (config.scrollDeadZoneMin - controlY) / config.scrollDeadZoneMin;
-            state.scroll.target = -config.scrollMaxSpeedPx * clamp(intensity, 0, 1);
-            return;
+            state.scroll.targetY = -config.scrollMaxSpeedPx * clamp((config.scrollDeadZoneMin - controlY) / config.scrollDeadZoneMin, 0, 1);
+        } else if (controlY > config.scrollDeadZoneMax) {
+            state.scroll.targetY = config.scrollMaxSpeedPx * clamp((controlY - config.scrollDeadZoneMax) / (1 - config.scrollDeadZoneMax), 0, 1);
+        } else {
+            state.scroll.targetY = 0;
         }
 
-        if (controlY > config.scrollDeadZoneMax) {
-            const intensity = (controlY - config.scrollDeadZoneMax) / (1 - config.scrollDeadZoneMax);
-            state.scroll.target = config.scrollMaxSpeedPx * clamp(intensity, 0, 1);
-            return;
+        if (controlX < config.scrollDeadZoneMin) {
+            state.scroll.targetX = -config.scrollMaxSpeedPx * clamp((config.scrollDeadZoneMin - controlX) / config.scrollDeadZoneMin, 0, 1);
+        } else if (controlX > config.scrollDeadZoneMax) {
+            state.scroll.targetX = config.scrollMaxSpeedPx * clamp((controlX - config.scrollDeadZoneMax) / (1 - config.scrollDeadZoneMax), 0, 1);
+        } else {
+            state.scroll.targetX = 0;
         }
-
-        state.scroll.target = 0;
     }
 
     function triggerClickAtCursor() {
@@ -511,7 +560,7 @@
         return true;
     }
 
-    function handleClickFeedback(clicked, source) {
+    function handleClickFeedback(clicked, source, isDouble = false) {
         if (!clicked) {
             return;
         }
@@ -519,13 +568,19 @@
         state.stats.clicks += 1;
         dom.cursor.classList.add("clicando");
         addWave(state.cursor.x, state.cursor.y);
+        
+        if (isDouble) {
+            playSound("double-click");
+            showNotification("Double Pinch Realizado");
+            addWave(state.cursor.x, state.cursor.y); // onda extra
+        } else {
+            playSound("click");
+            if (source === "gesture") showNotification("Clique por gesto");
+        }
+
         window.setTimeout(() => {
             dom.cursor.classList.remove("clicando");
         }, 140);
-
-        if (source === "gesture") {
-            showNotification("Clique por gesto");
-        }
     }
 
     function processHandLandmarks(landmarks, now) {
@@ -564,7 +619,8 @@
             || pinchRatio >= pinchThresholds.ratioClose + 0.08;
 
         if (pinchIsClose) {
-            state.scroll.target = 0;
+            state.scroll.targetX = 0;
+            state.scroll.targetY = 0;
             if (!state.pinchClosed) {
                 state.pinchClosed = true;
                 state.pinchClosedAt = now;
@@ -578,12 +634,13 @@
                 && now - state.lastPinchClickAt >= config.pinchClickMinGapMs;
 
             if (canTriggerInCycle) {
+                const isDouble = (now - state.lastPinchClickAt < config.doublePinchMaxMs);
                 const didClick = triggerClickAtCursor();
                 if (didClick) {
                     state.lastPinchAt = now;
                     state.lastPinchClickAt = now;
                     state.pinchTriggeredInCycle = true;
-                    handleClickFeedback(true, "gesture");
+                    handleClickFeedback(true, "gesture", isDouble);
                 }
             }
         } else if (state.pinchClosed && pinchCanReset) {
@@ -593,7 +650,7 @@
         }
 
         if (!pinchIsClose) {
-            updateScrollTarget(indexTip.y, palmBase.y);
+            updateScrollTarget(indexTip.y, palmBase.y, indexTip.x, palmBase.x);
         }
 
         drawLandmarks(landmarks);
@@ -673,14 +730,15 @@
 
     function runLoop() {
         const tick = (now) => {
-            state.scroll.velocity += (state.scroll.target - state.scroll.velocity) * config.scrollSmoothing;
-            if (Math.abs(state.scroll.velocity) < 0.08) {
-                state.scroll.velocity = 0;
-            }
+            state.scroll.velocityY += (state.scroll.targetY - state.scroll.velocityY) * config.scrollSmoothing;
+            state.scroll.velocityX += (state.scroll.targetX - state.scroll.velocityX) * config.scrollSmoothing;
 
-            if (Math.abs(state.scroll.velocity) > 0) {
-                window.scrollBy(0, state.scroll.velocity);
-                if (Math.abs(state.scroll.velocity) > 1.2 && now - state.scroll.lastCountAt >= 120) {
+            if (Math.abs(state.scroll.velocityY) < 0.08) state.scroll.velocityY = 0;
+            if (Math.abs(state.scroll.velocityX) < 0.08) state.scroll.velocityX = 0;
+
+            if (Math.abs(state.scroll.velocityY) > 0 || Math.abs(state.scroll.velocityX) > 0) {
+                window.scrollBy(state.scroll.velocityX, state.scroll.velocityY);
+                if ((Math.abs(state.scroll.velocityY) > 1.2 || Math.abs(state.scroll.velocityX) > 1.2) && now - state.scroll.lastCountAt >= 120) {
                     state.stats.scrolls += 1;
                     state.scroll.lastCountAt = now;
                 }
@@ -689,6 +747,15 @@
             applyKeyboardMovement();
             drawEffects();
             updateStats(now);
+            
+            // Auto-Sleep Mode Logic
+            if (state.handVisible || state.keyboard.left || state.keyboard.right || state.keyboard.up || state.keyboard.down) {
+                state.lastActivityAt = now;
+                document.body.style.opacity = "1";
+            } else if (now - state.lastActivityAt > config.sleepModeTimeoutMs) {
+                document.body.style.opacity = "0.4"; // Escurece a tela se ocioso por muito tempo
+                document.body.style.transition = "opacity 1s ease";
+            }
 
             state.scroll.rafId = window.requestAnimationFrame(tick);
         };
@@ -765,7 +832,8 @@
             }
 
             state.framesWithoutHand += 1;
-            state.scroll.target = 0;
+            state.scroll.targetX = 0;
+            state.scroll.targetY = 0;
             if (state.framesWithoutHand > config.handLossGraceFrames && state.handVisible) {
                 state.handVisible = false;
                 state.stats.confidence = 0;
@@ -837,8 +905,10 @@
         state.pinchClosed = false;
         state.pinchDistanceEma = 0;
         state.pinchTriggeredInCycle = false;
-        state.scroll.target = 0;
-        state.scroll.velocity = 0;
+        state.scroll.targetX = 0;
+        state.scroll.targetY = 0;
+        state.scroll.velocityX = 0;
+        state.scroll.velocityY = 0;
         state.stats.confidence = 0;
         state.pipeline.sending = false;
         state.pipeline.lastSentAt = 0;

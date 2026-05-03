@@ -650,6 +650,103 @@
                 flex-direction: column;
             }
         }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* FPS Badge Flutuante */
+        .fps-badge {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--brand), #2f9b92);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 6px 12px;
+            border-radius: 999px;
+            z-index: 10020;
+            box-shadow: 0 4px 16px rgba(11, 127, 114, 0.3);
+            letter-spacing: 0.04em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .fps-badge .fps-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #7fffec;
+            animation: pulse 1.2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Confetti */
+        .confetti-piece {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+            pointer-events: none;
+            z-index: 10100;
+            animation: confetti-fall 1.2s ease-out forwards;
+        }
+        @keyframes confetti-fall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(200px) rotate(720deg); opacity: 0; }
+        }
+
+        /* Word History */
+        .word-history-panel {
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            max-width: 260px;
+            background: var(--bg-soft);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 12px 14px;
+            z-index: 10005;
+            box-shadow: 0 8px 24px rgba(11, 127, 114, 0.12);
+        }
+        .word-history-title {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--brand);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .word-history-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+        .word-chip {
+            background: var(--bg);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 3px 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--ink);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .word-chip:hover {
+            background: var(--brand);
+            color: #fff;
+            border-color: var(--brand);
+        }
     </style>
 </head>
 <body>
@@ -661,6 +758,21 @@
     <video id="videoElement" autoplay muted playsinline></video>
 
     <div id="notification-toast" class="toast"></div>
+
+    <!-- FPS Badge Flutuante -->
+    <div class="fps-badge" id="fps-badge">
+        <div class="fps-dot"></div>
+        <span id="fps-badge-text">-- FPS</span>
+    </div>
+
+    <!-- Word History Panel -->
+    <div class="word-history-panel" id="word-history-panel">
+        <div class="word-history-title">
+            Historico de Palavras
+            <button id="clear-word-history" style="background:none;border:none;color:var(--warn);cursor:pointer;font-size:0.75rem;">Limpar</button>
+        </div>
+        <div class="word-history-list" id="word-history-list"></div>
+    </div>
 
     <div id="consent-modal" class="modal hidden">
         <div class="modal-card">
@@ -771,6 +883,7 @@
                         <li class="shortcut-item"><span>Alternar landmarks</span><kbd>Alt + L</kbd></li>
                         <li class="shortcut-item"><span>Resetar frase</span><kbd>Alt + R</kbd></li>
                         <li class="shortcut-item"><span>Contraste alto</span><kbd>Alt + C</kbd></li>
+                        <li class="shortcut-item"><span>Limpar Grid</span><kbd>Alt + G</kbd></li>
                     </ul>
                 </article>
             </section>
@@ -795,6 +908,13 @@
                 <article class="panel">
                     <h2>Historico de reconhecimento</h2>
                     <ul id="recognition-log" class="log-list"></ul>
+                </article>
+
+                <article class="panel">
+                    <h2>Grid do Alfabeto</h2>
+                    <p class="muted" style="font-size:0.82rem;margin-bottom:8px;">A letra detectada com alta confiança acende aqui em tempo real.</p>
+                    <div id="visual-grid" class="visual-grid"></div>
+                    <button id="clear-grid-btn" class="btn secondary" style="margin-top:10px;width:100%;">Limpar Grid (Alt+G)</button>
                 </article>
             </section>
         </main>

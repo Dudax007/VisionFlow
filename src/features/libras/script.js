@@ -39,7 +39,12 @@
         actionBackspaceBtn: document.getElementById("action-backspace"),
         actionClearBtn: document.getElementById("action-clear"),
         actionCopyBtn: document.getElementById("action-copy"),
-        actionExportBtn: document.getElementById("action-export")
+        actionExportBtn: document.getElementById("action-export"),
+        visualGrid: document.getElementById("visual-grid"),
+        clearGridBtn: document.getElementById("clear-grid-btn"),
+        fpsBadgeText: document.getElementById("fps-badge-text"),
+        wordHistoryList: document.getElementById("word-history-list"),
+        clearWordHistoryBtn: document.getElementById("clear-word-history")
     };
 
     if (!dom.video || !dom.landmarkCanvas || !dom.effectsCanvas || !dom.outputText) {
@@ -49,6 +54,78 @@
     const settingsStorageKey = "visionflow-libras-settings-v1";
     const templatesStorageKey = "visionflow-libras-templates-v1";
     const transcriptStorageKey = "visionflow-libras-transcript-v1";
+
+    // ─── Feature 6: Word History ────────────────────────────
+    const wordHistory = [];
+    const audioCtxLibras = new (window.AudioContext || window.webkitAudioContext)();
+
+    function addWordToHistory(word) {
+        if (!word || word.trim().length < 2) return;
+        if (wordHistory[0] === word) return; // evita duplicata consecutiva
+        wordHistory.unshift(word);
+        if (wordHistory.length > 20) wordHistory.pop();
+        renderWordHistory();
+    }
+
+    function renderWordHistory() {
+        if (!dom.wordHistoryList) return;
+        dom.wordHistoryList.innerHTML = "";
+        wordHistory.forEach(w => {
+            const chip = document.createElement("span");
+            chip.className = "word-chip";
+            chip.textContent = w;
+            chip.title = "Clique para reinserir";
+            chip.addEventListener("click", () => {
+                if (dom.outputText) {
+                    dom.outputText.classList.remove("placeholder");
+                    dom.outputText.textContent += w;
+                }
+            });
+            dom.wordHistoryList.appendChild(chip);
+        });
+    }
+
+    // ─── Feature 7: Confetti ───────────────────────────────
+    function spawnConfetti(x, y) {
+        const colors = ["#0b7f72", "#f08a4b", "#38d4bf", "#ffb067", "#7fffec", "#ff7f65"];
+        for (let i = 0; i < 18; i++) {
+            const piece = document.createElement("div");
+            piece.className = "confetti-piece";
+            piece.style.left = `${x + (Math.random() - 0.5) * 100}px`;
+            piece.style.top = `${y + (Math.random() - 0.5) * 40}px`;
+            piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+            piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+            document.body.appendChild(piece);
+            setTimeout(() => piece.remove(), 1300);
+        }
+    }
+
+    // ─── Feature 8: Grid Key Hover Sound ──────────────────
+    function playGridHoverSound() {
+        if (audioCtxLibras.state === "suspended") audioCtxLibras.resume();
+        const osc = audioCtxLibras.createOscillator();
+        const gain = audioCtxLibras.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtxLibras.destination);
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(900, audioCtxLibras.currentTime);
+        gain.gain.setValueAtTime(0.04, audioCtxLibras.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtxLibras.currentTime + 0.06);
+        osc.start();
+        osc.stop(audioCtxLibras.currentTime + 0.06);
+    }
+
+    // ─── Feature 9: Clear Grid ────────────────────────────
+    function clearGrid() {
+        document.querySelectorAll(".grid-key").forEach(k => k.classList.remove("active"));
+    }
+
+    // ─── Feature 10: FPS Badge ───────────────────────────
+    function updateFpsBadge(fps) {
+        if (dom.fpsBadgeText) {
+            dom.fpsBadgeText.textContent = `${fps} FPS`;
+        }
+    }
 
     const landmarkCtx = dom.landmarkCanvas.getContext("2d");
     const effectsCtx = dom.effectsCanvas.getContext("2d");
@@ -1064,6 +1141,8 @@
             renderOutput();
             renderSuggestions();
             addEffectPulse(window.innerWidth * 0.55, 120, "rgba(11, 127, 114, 0.75)");
+            // Feature 7: Confetti no commit de letra
+            spawnConfetti(window.innerWidth * 0.55, 120);
             return true;
         }
 
@@ -1086,6 +1165,10 @@
         if (!state.transcript || state.transcript.endsWith(" ")) {
             return;
         }
+
+        // Feature 6: Salva palavra no histórico antes de adicionar espaço
+        const lastWord = state.transcript.trim().split(" ").pop();
+        addWordToHistory(lastWord);
 
         state.transcript += " ";
         saveTranscript();
@@ -1737,8 +1820,17 @@
     }
 
     function initEffectsLoop() {
-        const loop = () => {
+        let fpsFrames = 0;
+        let fpsLastTick = performance.now();
+
+        const loop = (now) => {
             drawEffects();
+            fpsFrames++;
+            if (now - fpsLastTick >= 1000) {
+                updateFpsBadge(fpsFrames);
+                fpsFrames = 0;
+                fpsLastTick = now;
+            }
             state.loopRafId = window.requestAnimationFrame(loop);
         };
 
@@ -1778,6 +1870,46 @@
         bindTemplateEvents();
         bindComposerEvents();
         initEffectsLoop();
+
+        // Inicializar Grid do Alfabeto (Feature 9: Clear Grid + Feature 8: Hover Sound)
+        if (dom.visualGrid) {
+            const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+            dom.visualGrid.innerHTML = "";
+            alphabet.forEach(letter => {
+                const div = document.createElement("div");
+                div.className = "grid-key";
+                div.id = `grid-key-${letter}`;
+                div.textContent = letter;
+                div.addEventListener("mouseenter", () => playGridHoverSound());
+                dom.visualGrid.appendChild(div);
+            });
+        }
+
+        // Feature 9: Botão Clear Grid
+        if (dom.clearGridBtn) {
+            dom.clearGridBtn.addEventListener("click", () => {
+                clearGrid();
+                showToast("Grid limpo");
+            });
+        }
+
+        // Feature 6: Clear Word History
+        if (dom.clearWordHistoryBtn) {
+            dom.clearWordHistoryBtn.addEventListener("click", () => {
+                wordHistory.length = 0;
+                renderWordHistory();
+                showToast("Histórico limpo");
+            });
+        }
+
+        // Feature 9: Alt+G para limpar grid
+        document.addEventListener("keydown", (e) => {
+            if (e.altKey && e.key.toLowerCase() === "g") {
+                e.preventDefault();
+                clearGrid();
+                showToast("Grid limpo");
+            }
+        });
 
         pushLog("Studio Libras inicializado.", "success");
         showToast("Studio Libras pronto");
