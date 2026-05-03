@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisionFlow | Plataforma de Gestos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f5f4ef;
+            --paper: #ffffff;
+            --ink: #0c2a3f;
+            --ink-soft: #4a6275;
+            --line: #d3dbe2;
+            --brand: #1f6f78;
+            --brand-2: #f4a261;
+            --shadow: 0 24px 44px rgba(17, 40, 58, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            min-height: 100%;
+            background:
+                radial-gradient(circle at 8% 12%, rgba(31, 111, 120, 0.13), transparent 26%),
+                radial-gradient(circle at 88% 8%, rgba(244, 162, 97, 0.24), transparent 34%),
+                linear-gradient(170deg, #f4f2ec 0%, #f6f5f0 52%, #eceef1 100%);
+            color: var(--ink);
+            font-family: "DM Sans", sans-serif;
+        }
+
+        .wrap {
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: 24px clamp(14px, 3vw, 30px) 72px;
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 12px 14px;
+            box-shadow: 0 8px 20px rgba(16, 39, 54, 0.08);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-family: "Space Grotesk", sans-serif;
+            font-weight: 700;
+        }
+
+        .dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 999px;
+            background: linear-gradient(120deg, #1f6f78, #f4a261);
+            box-shadow: 0 0 0 7px rgba(31, 111, 120, 0.12);
+        }
+
+        .hero {
+            margin-top: 16px;
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            background: linear-gradient(160deg, rgba(255, 255, 255, 0.86), rgba(250, 247, 241, 0.94));
+            padding: clamp(20px, 3.6vw, 36px);
+            box-shadow: var(--shadow);
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 16px;
+        }
+
+        .eyebrow {
+            margin: 0;
+            font-family: "Space Grotesk", sans-serif;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-size: 0.76rem;
+            color: var(--brand);
+            font-weight: 700;
+        }
+
+        h1 {
+            margin: 10px 0 8px;
+            font-family: "Space Grotesk", sans-serif;
+            letter-spacing: -0.02em;
+            font-size: clamp(2rem, 5vw, 3.1rem);
+            line-height: 1.04;
+        }
+
+        .hero p {
+            margin: 0;
+            color: var(--ink-soft);
+            line-height: 1.7;
+            max-width: 700px;
+        }
+
+        .cta-row {
+            margin-top: 18px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            text-decoration: none;
+            border-radius: 999px;
+            padding: 11px 16px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: transform 120ms ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(120deg, #1f6f78, #3f8f97);
+            color: #fff;
+            box-shadow: 0 12px 24px rgba(31, 111, 120, 0.24);
+        }
+
+        .btn-secondary {
+            background: #fff;
+            color: var(--ink);
+            border: 1px solid var(--line);
+        }
+
+        .facts {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .fact {
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+        }
+
+        .fact span {
+            display: block;
+            color: var(--ink-soft);
+            font-size: 0.75rem;
+        }
+
+        .fact strong {
+            display: block;
+            margin-top: 6px;
+            font-size: 0.96rem;
+        }
+
+        .section {
+            margin-top: 14px;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .section h2 {
+            margin: 0 0 6px;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 1.2rem;
+        }
+
+        .section p {
+            margin: 0;
+            color: var(--ink-soft);
+            line-height: 1.7;
+        }
+
+        .features {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .feature {
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.86);
+            padding: 12px;
+        }
+
+        .feature h3 {
+            margin: 0;
+            font-size: 0.96rem;
+        }
+
+        .feature p {
+            margin: 7px 0 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .preview {
+            margin-top: 12px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .preview-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            border-bottom: 1px solid var(--line);
+            padding: 9px 12px;
+            font-size: 0.84rem;
+            color: var(--ink-soft);
+        }
+
+        iframe {
+            width: 100%;
+            min-height: 680px;
+            border: 0;
+            background: #fff;
+        }
+
+        .footer {
+            margin-top: 16px;
+            text-align: center;
+            color: var(--ink-soft);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 980px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .facts {
+                grid-template-columns: 1fr;
+            }
+
+            iframe {
+                min-height: 560px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <header class="top">
+            <div class="brand">
+                <span class="dot"></span>
+                VisionFlow
+            </div>
+            <a class="btn btn-secondary" href="README.md">README</a>
+        </header>
+
+        <section class="hero">
+            <div>
+                <p class="eyebrow">Experiencia simplificada</p>
+                <h1>Plataforma touchless com menos ruido e mais foco</h1>
+                <p>Esta versao prioriza o objetivo principal do produto: agilizar o controle de plataformas por gestos e melhorar acessibilidade, sem excesso de modulos na tela.</p>
+                <div class="cta-row">
+                    <a class="btn btn-primary" href="src/features/hand-biometrics/index.html">Abrir laboratorio</a>
+                    <a class="btn btn-secondary" href="src/features/hand-biometrics/index.html" target="_blank" rel="noreferrer">Abrir em nova guia</a>
+                    <a class="btn btn-secondary" href="src/features/libras/index.html">Abrir studio Libras</a>
+                </div>
+            </div>
+            <aside class="facts">
+                <article class="fact">
+                    <span>Nucleo de gestos</span>
+                    <strong>Cursor, clique e scroll</strong>
+                </article>
+                <article class="fact">
+                    <span>Acessibilidade</span>
+                    <strong>Fallback por teclado</strong>
+                </article>
+                <article class="fact">
+                    <span>Operacao</span>
+                    <strong>Calibracao rapida</strong>
+                </article>
+                <article class="fact">
+                    <span>Privacidade</span>
+                    <strong>Consentimento de camera</strong>
+                </article>
+            </aside>
+        </section>
+
+        <section class="section">
+            <h2>O que ficou no produto</h2>
+            <p>A interface foi reduzida para manter clareza de uso e previsibilidade durante a demo ou operacao real.</p>
+            <div class="features">
+                <article class="feature">
+                    <h3>Controle touchless essencial</h3>
+                    <p>Movimento de cursor por mao com clique por pinca e histerese para reduzir falso acionamento.</p>
+                </article>
+                <article class="feature">
+                    <h3>Scroll por altura da mao</h3>
+                    <p>Rolagem progressiva em zona neutra para navegar paginas longas sem mouse.</p>
+                </article>
+                <article class="feature">
+                    <h3>Fallback acessivel</h3>
+                    <p>Setas/WASD e Enter/Espaco garantem uso continuo mesmo sem permissao de camera.</p>
+                </article>
+                <article class="feature">
+                    <h3>Studio Libras dedicado</h3>
+                    <p>Pagina separada para interpretacao em Libras com frase, sugestoes e templates personalizados.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Preview integrado</h2>
+            <p>Visualize o laboratorio principal diretamente nesta pagina.</p>
+            <div class="preview">
+                <div class="preview-head">
+                    <span>VisionFlow / Hand Biometrics</span>
+                    <span>Permita camera para gestos</span>
+                </div>
+                <iframe src="src/features/hand-biometrics/index.html" title="VisionFlow Hand Biometrics" allow="camera"></iframe>
+            </div>
+        </section>
+
+        <p class="footer">VisionFlow <span id="year"></span> · Controle por gestos com foco em acessibilidade</p>
+    </div>
+
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
