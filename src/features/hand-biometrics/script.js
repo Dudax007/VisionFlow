@@ -28,7 +28,9 @@
         fpsCounter: document.getElementById("fps-counter"),
         action1Btn: document.getElementById("btn-action-1"),
         action2Btn: document.getElementById("btn-action-2"),
-        action3Btn: document.getElementById("btn-action-3")
+        action3Btn: document.getElementById("btn-action-3"),
+        tooltip: document.getElementById("onboardingTooltip"),
+        closeTooltipBtn: document.getElementById("closeTooltip")
     };
 
     if (!dom.video || !dom.cursor || !dom.status || !dom.cameraStatus || !dom.handStatus || !dom.fallbackStatus) {
@@ -263,6 +265,19 @@
         if (dom.consentModal) {
             dom.consentModal.classList.remove("hidden");
         }
+
+        if (dom.closeTooltipBtn && dom.tooltip) {
+            dom.closeTooltipBtn.addEventListener("click", () => {
+                dom.tooltip.classList.remove("show");
+            });
+            // Mostrar tooltip automaticamente após 2 segundos do aceite
+            dom.acceptConsentBtn.addEventListener("click", () => {
+                setTimeout(() => {
+                    dom.tooltip.classList.add("show");
+                    setTimeout(() => dom.tooltip.classList.remove("show"), 10000); // esconde após 10s
+                }, 2000);
+            });
+        }
     }
 
     function closeConsentModal() {
@@ -276,6 +291,18 @@
         state.cursor.y = clamp(y, 0, window.innerHeight);
         dom.cursor.style.left = `${Math.round(state.cursor.x)}px`;
         dom.cursor.style.top = `${Math.round(state.cursor.y)}px`;
+
+        if (state.trackingActive) {
+            dom.cursor.classList.remove("tracking-low");
+            if (state.isScrolling) {
+                dom.cursor.classList.add("scroll-mode");
+            } else {
+                dom.cursor.classList.remove("scroll-mode");
+            }
+        } else {
+            dom.cursor.classList.add("tracking-low");
+            dom.cursor.classList.remove("scroll-mode");
+        }
     }
 
     function addWave(x, y) {
@@ -300,8 +327,8 @@
                 continue;
             }
 
-            effectsCtx.strokeStyle = `rgba(244, 162, 97, ${wave.opacity})`;
-            effectsCtx.lineWidth = 2;
+            effectsCtx.strokeStyle = `rgba(251, 146, 60, ${wave.opacity})`; // var(--brand-2) RGB
+            effectsCtx.lineWidth = 3;
             effectsCtx.beginPath();
             effectsCtx.arc(wave.x, wave.y, wave.radius, 0, Math.PI * 2);
             effectsCtx.stroke();

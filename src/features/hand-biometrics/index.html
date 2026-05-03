@@ -98,15 +98,28 @@
             pointer-events: none;
             z-index: 9999;
             transform: translate(-50%, -50%);
-            background: radial-gradient(circle at 35% 35%, #f2fffd 0, #56b7b0 60%, #1f6f78 100%);
-            box-shadow: 0 0 0 6px rgba(31, 111, 120, 0.14), 0 0 26px rgba(31, 111, 120, 0.4);
-            transition: transform 120ms ease;
+            background: radial-gradient(circle at 35% 35%, #f2fffd 0, var(--brand) 60%, var(--brand) 100%);
+            box-shadow: 0 0 0 6px var(--glass-border), 0 0 26px var(--brand-glow);
+            transition: transform 120ms ease, background 0.3s ease, box-shadow 0.3s ease, width 0.2s ease, height 0.2s ease, border-radius 0.2s ease;
         }
 
         #cursor-virtual.clicando {
             transform: translate(-50%, -50%) scale(0.68);
-            background: radial-gradient(circle at 35% 35%, #fff8ed 0, #f4a261 60%, #cf5c36 100%);
-            box-shadow: 0 0 0 8px rgba(244, 162, 97, 0.18), 0 0 28px rgba(207, 92, 54, 0.42);
+            background: radial-gradient(circle at 35% 35%, #fff8ed 0, var(--brand-2) 60%, var(--warn) 100%);
+            box-shadow: 0 0 0 8px rgba(251, 146, 60, 0.18), 0 0 32px var(--warn);
+        }
+
+        #cursor-virtual.tracking-low {
+            background: radial-gradient(circle at 35% 35%, #fff8ed 0, var(--warn) 60%, var(--warn) 100%);
+            box-shadow: 0 0 0 6px rgba(234, 88, 12, 0.14), 0 0 26px rgba(234, 88, 12, 0.4);
+            opacity: 0.8;
+        }
+
+        #cursor-virtual.scroll-mode {
+            height: 40px;
+            border-radius: 12px;
+            transform: translate(-50%, -50%) scale(0.9);
+            box-shadow: 0 0 0 4px var(--brand-glow), 0 10px 20px var(--brand-glow);
         }
 
         #landmarkCanvas,
@@ -169,6 +182,65 @@
             margin: 8px 0 0;
             color: var(--ink-soft);
             line-height: 1.6;
+        }
+
+        .onboarding-tooltip {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            background: var(--bg-soft);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--brand);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 20px 40px var(--brand-glow);
+            z-index: 10010;
+            transform: translateX(120%);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .onboarding-tooltip.show {
+            transform: translateX(0);
+        }
+
+        .onboarding-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            color: var(--brand);
+        }
+
+        .onboarding-close {
+            background: none;
+            border: none;
+            color: var(--ink-soft);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0;
+        }
+
+        .onboarding-step {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--ink);
+        }
+
+        .onboarding-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--brand-glow);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
         }
 
         .consent-actions {
@@ -628,6 +700,21 @@
                 </article>
             </section>
         </main>
+    </div>
+
+    <div class="onboarding-tooltip" id="onboardingTooltip">
+        <div class="onboarding-header">
+            Dica Rapida
+            <button class="onboarding-close" id="closeTooltip">&times;</button>
+        </div>
+        <div class="onboarding-step">
+            <div class="onboarding-icon">🤏</div>
+            Junte polegar e indicador para clicar.
+        </div>
+        <div class="onboarding-step">
+            <div class="onboarding-icon">↕️</div>
+            Levante ou abaixe a mao para rolar a tela.
+        </div>
     </div>
 
     <script src="script.js"></script>
