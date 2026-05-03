@@ -668,6 +668,58 @@
                 flex-direction: column;
             }
         }
+
+        /* Visual Grid */
+        .visual-grid-container {
+            margin-top: 16px;
+        }
+        .visual-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+            gap: 6px;
+        }
+        .grid-key {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--bg-soft);
+            color: var(--ink);
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .grid-key.active {
+            background: var(--brand);
+            color: #fff;
+            border-color: var(--brand);
+            box-shadow: 0 0 16px var(--brand-glow);
+            transform: scale(1.1);
+            z-index: 2;
+        }
+
+        /* Circular Progress Feedback */
+        .btn.recording {
+            position: relative;
+            color: transparent;
+            pointer-events: none;
+        }
+        .btn.recording::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 20px; height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s infinite linear;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -813,6 +865,11 @@
                 <article class="panel">
                     <h2>Historico de reconhecimento</h2>
                     <ul id="recognition-log" class="log-list"></ul>
+                </article>
+
+                <article class="panel visual-grid-container">
+                    <h2>Grid do Alfabeto</h2>
+                    <div id="visual-grid" class="visual-grid"></div>
                 </article>
             </section>
         </main>
