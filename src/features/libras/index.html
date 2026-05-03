@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,21 +10,39 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Sora:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #eef4f3;
-            --bg-soft: #ffffff;
-            --ink: #0f2f35;
-            --ink-soft: #506a6f;
-            --line: #cfe0df;
-            --brand: #0b7f72;
-            --brand-2: #f08a4b;
-            --ok: #1d9f85;
-            --warn: #d4603a;
-            --shadow: 0 22px 44px rgba(16, 46, 52, 0.12);
+        :root[data-theme="light"] {
+            --bg: #f8fafc;
+            --bg-soft: rgba(255, 255, 255, 0.75);
+            --ink: #0f172a;
+            --ink-soft: #475569;
+            --line: rgba(148, 163, 184, 0.3);
+            --brand: #0f766e;
+            --brand-2: #ea580c;
+            --ok: #059669;
+            --warn: #dc2626;
+            --shadow: 0 24px 44px rgba(15, 23, 42, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --brand-glow: rgba(15, 118, 110, 0.4);
+        }
+
+        :root[data-theme="dark"] {
+            --bg: #0f172a;
+            --bg-soft: rgba(30, 41, 59, 0.6);
+            --ink: #f8fafc;
+            --ink-soft: #94a3b8;
+            --line: rgba(148, 163, 184, 0.15);
+            --brand: #14b8a6;
+            --brand-2: #f97316;
+            --ok: #10b981;
+            --warn: #ef4444;
+            --shadow: 0 24px 44px rgba(0, 0, 0, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --brand-glow: rgba(20, 184, 166, 0.4);
         }
 
         * {
             box-sizing: border-box;
+            transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
         }
 
         html,
@@ -33,28 +51,28 @@
             min-height: 100%;
             color: var(--ink);
             font-family: "Plus Jakarta Sans", sans-serif;
-            background:
-                radial-gradient(circle at 8% 10%, rgba(11, 127, 114, 0.16), transparent 28%),
-                radial-gradient(circle at 95% 4%, rgba(240, 138, 75, 0.18), transparent 30%),
-                linear-gradient(160deg, #ebf2f1 0%, #f5f7f6 45%, #e9efee 100%);
+            background-color: var(--bg);
+            background-image:
+                radial-gradient(circle at 8% 10%, rgba(20, 184, 166, 0.12), transparent 28%),
+                radial-gradient(circle at 95% 4%, rgba(249, 115, 22, 0.12), transparent 30%);
+            background-attachment: fixed;
             overflow-x: hidden;
         }
 
         body.high-contrast {
-            --bg: #0d1117;
-            --bg-soft: #141a22;
-            --ink: #f0f7ff;
-            --ink-soft: #a7bbcc;
-            --line: #2f4152;
-            --brand: #38d4bf;
-            --brand-2: #ffb067;
-            --ok: #47d9a2;
-            --warn: #ff7f65;
-            --shadow: 0 22px 44px rgba(0, 0, 0, 0.32);
-            background:
-                radial-gradient(circle at 8% 10%, rgba(56, 212, 191, 0.15), transparent 28%),
-                radial-gradient(circle at 95% 4%, rgba(255, 176, 103, 0.18), transparent 30%),
-                linear-gradient(160deg, #0b1118 0%, #101822 45%, #121f2a 100%);
+            --bg: #000000;
+            --bg-soft: #111111;
+            --ink: #ffffff;
+            --ink-soft: #bbbbbb;
+            --line: #333333;
+            --brand: #00ffcc;
+            --brand-2: #ff9900;
+            --ok: #00ff00;
+            --warn: #ff3300;
+            --shadow: 0 22px 44px rgba(0, 0, 0, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --brand-glow: rgba(0, 255, 204, 0.8);
+            background: #000000;
         }
 
         .orb {

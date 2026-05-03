@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,21 +10,39 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #f5f4ef;
-            --bg-soft: #ffffff;
-            --ink: #0c2a3f;
-            --ink-soft: #4a6275;
-            --line: #d5dde4;
+        :root[data-theme="light"] {
+            --bg: #f8fafc;
+            --bg-soft: rgba(255, 255, 255, 0.75);
+            --ink: #0f172a;
+            --ink-soft: #475569;
+            --line: rgba(148, 163, 184, 0.3);
             --brand: #1f6f78;
             --brand-2: #f4a261;
-            --ok: #2a9d8f;
-            --warn: #cf5c36;
-            --shadow: 0 22px 44px rgba(15, 35, 52, 0.12);
+            --ok: #059669;
+            --warn: #ea580c;
+            --shadow: 0 24px 44px rgba(15, 23, 42, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --brand-glow: rgba(31, 111, 120, 0.4);
+        }
+
+        :root[data-theme="dark"] {
+            --bg: #0b1120;
+            --bg-soft: rgba(30, 41, 59, 0.6);
+            --ink: #f8fafc;
+            --ink-soft: #94a3b8;
+            --line: rgba(148, 163, 184, 0.12);
+            --brand: #2dd4bf;
+            --brand-2: #fb923c;
+            --ok: #34d399;
+            --warn: #f97316;
+            --shadow: 0 24px 44px rgba(0, 0, 0, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --brand-glow: rgba(45, 212, 191, 0.4);
         }
 
         * {
             box-sizing: border-box;
+            transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
         }
 
         html,
@@ -33,10 +51,11 @@
             min-height: 100%;
             color: var(--ink);
             font-family: "DM Sans", sans-serif;
-            background:
+            background-color: var(--bg);
+            background-image:
                 radial-gradient(circle at 8% 10%, rgba(31, 111, 120, 0.13), transparent 28%),
-                radial-gradient(circle at 92% 0%, rgba(244, 162, 97, 0.22), transparent 34%),
-                linear-gradient(170deg, #f3f2eb 0%, #f7f6f2 48%, #ebeef2 100%);
+                radial-gradient(circle at 92% 0%, rgba(244, 162, 97, 0.22), transparent 34%);
+            background-attachment: fixed;
             overflow-x: hidden;
         }
 
