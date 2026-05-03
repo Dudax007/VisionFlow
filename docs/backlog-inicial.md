@@ -5,6 +5,7 @@ Objetivo desta fase: entregar um MVP funcional de navegacao touchless com biomet
 ## Sugestao de colunas no Kanban
 
 - Backlog
+- Concluído
 - Ready
 - In Progress
 - Review
@@ -18,7 +19,7 @@ Objetivo desta fase: entregar um MVP funcional de navegacao touchless com biomet
 
 ## Epic 1 - Fundacao Tecnica
 
-### VF-001 - Estruturar ambiente local de execucao
+### [CONCLUÍDO] VF-001 - Estruturar ambiente local de execucao
 - Prioridade: P0
 - Tipo: chore
 - Estimativa: 1 ponto
@@ -29,7 +30,7 @@ Objetivo desta fase: entregar um MVP funcional de navegacao touchless com biomet
   - Time consegue rodar sem dependencia extra complexa.
 - Dependencias: nenhuma
 
-### VF-002 - Configurar padrao de branches e PR
+### [CONCLUÍDO] VF-002 - Configurar padrao de branches e PR
 - Prioridade: P0
 - Tipo: chore
 - Estimativa: 2 pontos
@@ -52,7 +53,7 @@ Objetivo desta fase: entregar um MVP funcional de navegacao touchless com biomet
 
 ## Epic 2 - Motor de Interacao por Maos (MVP)
 
-### VF-010 - Captura de camera robusta
+### [CONCLUÍDO] VF-010 - Captura de camera robusta
 - Prioridade: P0
 - Tipo: feature
 - Estimativa: 3 pontos
@@ -63,7 +64,7 @@ Objetivo desta fase: entregar um MVP funcional de navegacao touchless com biomet
   - Nao quebra em navegadores sem suporte.
 - Dependencias: VF-001
 
-### VF-011 - Movimento de cursor com suavizacao
+### [CONCLUÍDO] VF-011 - Movimento de cursor com suavizacao
 - Prioridade: P0
 - Tipo: feature
 - Estimativa: 5 pontos
@@ -74,7 +75,7 @@ Objetivo desta fase: entregar um MVP funcional de navegacao touchless com biomet
   - Parametros de suavizacao sao ajustaveis.
 - Dependencias: VF-010
 
-### VF-012 - Clique por pinca com debounce
+### [CONCLUÍDO] VF-012 - Clique por pinca com debounce
 - Prioridade: P0
 - Tipo: feature
 - Estimativa: 3 pontos
@@ -84,7 +85,7 @@ Objetivo desta fase: entregar um MVP funcional de navegacao touchless com biomet
   - Estado visual de clique permanece consistente.
 - Dependencias: VF-011
 
-### VF-013 - Scroll por gesto vertical com limites
+### [CONCLUÍDO] VF-013 - Scroll por gesto vertical com limites
 - Prioridade: P0
 - Tipo: feature
 - Estimativa: 3 pontos
@@ -97,7 +98,7 @@ Objetivo desta fase: entregar um MVP funcional de navegacao touchless com biomet
 
 ## Epic 3 - UX e Acessibilidade Inicial
 
-### VF-020 - Estados de interface e onboarding rapido
+### [CONCLUÍDO] VF-020 - Estados de interface e onboarding rapido
 - Prioridade: P1
 - Tipo: feature
 - Estimativa: 3 pontos
@@ -107,7 +108,7 @@ Objetivo desta fase: entregar um MVP funcional de navegacao touchless com biomet
   - Mensagens curtas e claras em pt-BR.
 - Dependencias: VF-010
 
-### VF-021 - Feedback visual de confianca de rastreio
+### [CONCLUÍDO] VF-021 - Feedback visual de confianca de rastreio
 - Prioridade: P1
 - Tipo: feature
 - Estimativa: 2 pontos
@@ -117,7 +118,7 @@ Objetivo desta fase: entregar um MVP funcional de navegacao touchless com biomet
   - UX nao polui a tela.
 - Dependencias: VF-011
 
-### VF-022 - Suporte minimo a teclado como fallback
+### [CONCLUÍDO] VF-022 - Suporte minimo a teclado como fallback
 - Prioridade: P1
 - Tipo: feature
 - Estimativa: 2 pontos
@@ -129,7 +130,7 @@ Objetivo desta fase: entregar um MVP funcional de navegacao touchless com biomet
 
 ## Epic 4 - Privacidade e Seguranca de Dados
 
-### VF-030 - Politica de processamento local
+### [CONCLUÍDO] VF-030 - Politica de processamento local
 - Prioridade: P0
 - Tipo: chore
 - Estimativa: 2 pontos
@@ -139,7 +140,7 @@ Objetivo desta fase: entregar um MVP funcional de navegacao touchless com biomet
   - Linguagem clara para usuario final.
 - Dependencias: VF-001
 
-### VF-031 - Banner de consentimento informado
+### [CONCLUÍDO] VF-031 - Banner de consentimento informado
 - Prioridade: P1
 - Tipo: feature
 - Estimativa: 3 pontos
